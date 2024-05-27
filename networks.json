@@ -3,6 +3,9 @@
     "SDVMembership": {
       "address": "0xb41326531b5ab5dfEB0880DB37754568a0bF1AB7",
       "startBlock": 10525475
+    },
+    "SDVPerksRegistry": {
+      "address": "0x456b9ef1A9e08609DAd2E2771214b16ad8a8a176"
     }
   }
 }

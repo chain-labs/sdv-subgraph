@@ -42,3 +42,38 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/sdv-membership.ts
+  - kind: ethereum
+    name: SDVPerksRegistry
+    network: base-sepolia
+    source:
+      address: "0x456b9ef1A9e08609DAd2E2771214b16ad8a8a176"
+      abi: SDVPerksRegistry
+      startBlock: 10525575
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PerkDeactivated
+        - PerkEligibilityUpdated
+        - PerkRegistered
+        - SDVPerksRegistryRoleAdminChanged
+        - SDVPerksRegistryRoleGranted
+        - SDVPerksRegistryRoleRevoked
+      abis:
+        - name: SDVPerksRegistry
+          file: ./abis/SDVPerksRegistry.json
+      eventHandlers:
+        - event: PerkDeactivated(uint256,address)
+          handler: handlePerkDeactivated
+        - event: PerkEligibilityUpdated(indexed uint256,uint256[],uint256[])
+          handler: handlePerkEligibilityUpdated
+        - event: PerkRegistered(indexed uint256,string,string)
+          handler: handlePerkRegistered
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/sdv-perks-registry.ts
