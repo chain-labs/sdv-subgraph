@@ -1,12 +1,12 @@
 type  Member @entity {
-  id: Bytes!
+  id: String!
   address: Bytes!
   membershipContract: SDVVVMembership!
-  membership: Membership!  @derivedFrom(field: "owner")
+  membership: Membership  @derivedFrom(field: "owner")
 }
 
 type SDVVVMembership @entity {
-  id: Bytes!
+  id: String!
   address: Bytes!
   deploymentTrxHash: Bytes!
   deploymentBlockNumber: BigInt!
@@ -20,7 +20,7 @@ type SDVVVMembership @entity {
 }
 
 type TrustedEntity @entity {
-  id: Bytes!
+  id: String!
   address: Bytes!
   activeSince: BigInt!
   activeSinceBlockNumber: BigInt!
@@ -30,7 +30,7 @@ type TrustedEntity @entity {
 }
 
 type DefaultAdmin @entity {
-  id: Bytes!
+  id: String!
   address: Bytes!
   activeSince: BigInt!
   activeSinceBlockNumber: BigInt!
@@ -40,13 +40,13 @@ type DefaultAdmin @entity {
 }
 
 type Membership @entity {
-  id: Bytes!
+  id: String!
   tokenId: BigInt!
   activeSince: BigInt!
   blockNumber: BigInt!
   transactionHash: Bytes!
   isActive: Boolean!
-  tierLevel: Int!
+  tierLevel: BigInt!
   lastUpdate: BigInt!
   membershipContract: SDVVVMembership!
   owner: Member!
