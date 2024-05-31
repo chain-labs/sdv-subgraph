@@ -16,19 +16,23 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - EIP712DomainChanged
-        - RoleAdminChanged
-        - RoleGranted
-        - RoleRevoked
-        - Transfer
+        - Member
+        - SDVVVMembership
+        - TrustedEntity
+        - DefaultAdmin
+        - Membership
       abis:
         - name: SDVMembership
           file: ./abis/SDVMembership.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
+        - event: BaseUriUpdated(string)
+          handler: handleBaseUriUpdated
+        - event: UriSuffixUpdated(string)
+          handler: handleUriSuffixUpdated
+        - event: TierUpdated(indexed uint256,indexed uint256)
+          handler: handleTierUpdated
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
         - event: EIP712DomainChanged()
