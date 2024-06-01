@@ -206,7 +206,7 @@ export function handleTierUpdated(event: TierUpdatedEvent): void {
 
   if(membershipEntity == null) {
     log.error("Membership entity with ID {} not created properly. It should be initialized during the constructor", [membershipId]);
-    throw new Error(`Membership entity with ID ${membershipId} not created properly. It should be initialized during the constructor`);
+    return;
   }
 
   // update the data
@@ -229,7 +229,7 @@ export function handleBaseUriUpdated(event: BaseUriUpdatedEvent): void {
   // ensure the entity exist
   if(entity == null) {
     log.error("SDVVVMembership entity not created properly. It should be initialized during the constructor", []);
-    throw new Error("SDVVVMembership entity not created properly. It should be initialized during the constructor");
+    return;
   }
 
   // update the base URI
@@ -251,7 +251,7 @@ export function handleUriSuffixUpdated(event: UriSuffixUpdatedEvent): void {
   // ensure the entity exist
   if(entity == null) {
     log.error("SDVVVMembership entity not created properly. It should be initialized during the constructor", []);
-    throw new Error("SDVVVMembership entity not created properly. It should be initialized during the constructor");
+    return;
   }
 
   // update the base URI
