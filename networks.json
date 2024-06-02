@@ -1,11 +1,11 @@
 {
   "base-sepolia": {
     "SDVMembership": {
-      "address": "0xb41326531b5ab5dfEB0880DB37754568a0bF1AB7",
+      "address": "0x4ac0818e50cAd4c92F1E89815dAb5C646a938c44",
       "startBlock": 10525475
     },
     "SDVPerksRegistry": {
-      "address": "0x456b9ef1A9e08609DAd2E2771214b16ad8a8a176"
+      "address": "0x351A2E44f696927BB701cE52c836d5204719b843"
     }
   }
 }

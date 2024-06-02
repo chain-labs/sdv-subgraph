@@ -117,7 +117,7 @@ export function handleTransfer(event: TransferEvent): void {
   const membershipContractId = generateMembershipContractId(contractAddress);
   const tokenId = event.params.tokenId;
   const membershipId = generateMembershipId(tokenId);
-  const operationType = fromAddress !== Address.zero() && toAddrress !== Address.zero() ? "transfer" : toAddrress == Address.zero() ? "burn" : "mint";
+  const operationType = fromAddress != Address.zero() && toAddrress != Address.zero() ? "transfer" : toAddrress == Address.zero() ? "burn" : "mint";
 
   // mint
   if(operationType == "mint") {
@@ -194,6 +194,7 @@ export function handleTransfer(event: TransferEvent): void {
     membershipEntity.owner = toMemberId;
 
     // save entities
+    store.remove(MemberEntityName, fromMemberId);
     toMemberEntity.save();
     membershipEntity.save();
   }
@@ -206,7 +207,7 @@ export function handleTierUpdated(event: TierUpdatedEvent): void {
 
   if(membershipEntity == null) {
     log.error("Membership entity with ID {} not created properly. It should be initialized during the constructor", [membershipId]);
-    throw new Error(`Membership entity with ID ${membershipId} not created properly. It should be initialized during the constructor`);
+    return;
   }
 
   // update the data
@@ -229,7 +230,7 @@ export function handleBaseUriUpdated(event: BaseUriUpdatedEvent): void {
   // ensure the entity exist
   if(entity == null) {
     log.error("SDVVVMembership entity not created properly. It should be initialized during the constructor", []);
-    throw new Error("SDVVVMembership entity not created properly. It should be initialized during the constructor");
+    return;
   }
 
   // update the base URI
@@ -251,7 +252,7 @@ export function handleUriSuffixUpdated(event: UriSuffixUpdatedEvent): void {
   // ensure the entity exist
   if(entity == null) {
     log.error("SDVVVMembership entity not created properly. It should be initialized during the constructor", []);
-    throw new Error("SDVVVMembership entity not created properly. It should be initialized during the constructor");
+    return;
   }
 
   // update the base URI
