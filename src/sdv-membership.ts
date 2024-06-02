@@ -117,7 +117,7 @@ export function handleTransfer(event: TransferEvent): void {
   const membershipContractId = generateMembershipContractId(contractAddress);
   const tokenId = event.params.tokenId;
   const membershipId = generateMembershipId(tokenId);
-  const operationType = fromAddress !== Address.zero() && toAddrress !== Address.zero() ? "transfer" : toAddrress == Address.zero() ? "burn" : "mint";
+  const operationType = fromAddress != Address.zero() && toAddrress != Address.zero() ? "transfer" : toAddrress == Address.zero() ? "burn" : "mint";
 
   // mint
   if(operationType == "mint") {
@@ -194,6 +194,7 @@ export function handleTransfer(event: TransferEvent): void {
     membershipEntity.owner = toMemberId;
 
     // save entities
+    store.remove(MemberEntityName, fromMemberId);
     toMemberEntity.save();
     membershipEntity.save();
   }
