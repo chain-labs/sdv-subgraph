@@ -52,62 +52,26 @@ type Membership @entity {
   owner: Member!
 }
 
-type PerkDeactivated @entity(immutable: true) {
-  id: Bytes!
-  perkId: BigInt! # uint256
-  caller: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type PerksRegistry @entity {
+  id: String!
+  address: Bytes!
+  deploymentTrxHash: Bytes!
+  deploymentBlockNumber: BigInt!
+  deploymentTimestamp: BigInt!
+  membershipContract: SDVVVMembership!
+  perks: [Perk!] @derivedFrom(field: "perksRegistry")
 }
 
-type PerkEligibilityUpdated @entity(immutable: true) {
-  id: Bytes!
-  perkId: BigInt! # uint256
-  _existingEligibleTierLevels: [BigInt!]! # uint256[]
-  _updatedEligibleTierLevels: [BigInt!]! # uint256[]
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Perk @entity {
+  id: String!
+  perkId: BigInt!
+  name: String!
+  perkUri: String!
+  isPerkActive: Boolean!
+  perksRegistry: PerksRegistry!
+  createdOn: BigInt!
+  creationTrxHash: Bytes!
+  eligiblePerksForTier: [BigInt!]
+  lastUpdatedOn: BigInt!
+  lastUpdateTrxHash: Bytes!
 }
-
-type PerkRegistered @entity(immutable: true) {
-  id: Bytes!
-  perkId: BigInt! # uint256
-  name: String! # string
-  uri: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type SDVPerksRegistryRoleAdminChanged @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  previousAdminRole: Bytes! # bytes32
-  newAdminRole: Bytes! # bytes32
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type SDVPerksRegistryRoleGranted @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type SDVPerksRegistryRoleRevoked @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-

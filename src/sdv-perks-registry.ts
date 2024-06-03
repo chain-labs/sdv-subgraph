@@ -1,107 +1,121 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   PerkDeactivated as PerkDeactivatedEvent,
+  PerkReactivated as PerkReactivatedEvent,
   PerkEligibilityUpdated as PerkEligibilityUpdatedEvent,
   PerkRegistered as PerkRegisteredEvent,
   RoleAdminChanged as RoleAdminChangedEvent,
   RoleGranted as RoleGrantedEvent,
   RoleRevoked as RoleRevokedEvent,
+  PerkUriUpdated as PerkUriUpdatedEvent
 } from "../generated/SDVPerksRegistry/SDVPerksRegistry"
 import {
-  PerkDeactivated,
-  PerkEligibilityUpdated,
-  PerkRegistered,
-  RoleAdminChanged,
-  RoleGranted,
-  RoleRevoked,
+  PerksRegistry as PerksRegistryEntity,
+  Perk as PerkEntity
 } from "../generated/schema"
+import {
+  SDVPerksRegistry as PerksRegistryContract
+} from "../generated/SDVPerksRegistry/SDVPerksRegistry";
+import {
+  generatePerkId,
+  generatePerkRegistryId
+} from "./utils";
+import { log } from "matchstick-as";
+import { generateMembershipContractId } from "./utils";
 
 export function handlePerkDeactivated(event: PerkDeactivatedEvent): void {
-  let entity = new PerkDeactivated(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.perkId = event.params.perkId
-  entity.caller = event.params.caller
+  const perkIdFromEvent = event.params.perkId;
+  const perkId = generatePerkId(perkIdFromEvent);
+  let perkEntity =  PerkEntity.load(perkId);
+  if(perkEntity == null) {
+    log.error("Perk entity {}, not created correctly", [perkId]);
+    return;
+  }
+  perkEntity.isPerkActive = false;
+  perkEntity.lastUpdateTrxHash = event.transaction.hash;
+  perkEntity.lastUpdatedOn = event.block.timestamp;
+  perkEntity.save();
+}
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handlePerkReactivated(event: PerkReactivatedEvent): void {
+  const perkIdFromEvent = event.params.perkId;
+  const perkId = generatePerkId(perkIdFromEvent);
+  let perkEntity =  PerkEntity.load(perkId);
+  if(perkEntity == null) {
+    log.error("Perk entity {}, not created correctly", [perkId]);
+    return;
+  }
+  perkEntity.isPerkActive = true;
+  perkEntity.lastUpdateTrxHash = event.transaction.hash;
+  perkEntity.lastUpdatedOn = event.block.timestamp;
+  perkEntity.save();
 }
 
 export function handlePerkEligibilityUpdated(
   event: PerkEligibilityUpdatedEvent,
 ): void {
-  let entity = new PerkEligibilityUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.perkId = event.params.perkId
-  entity._existingEligibleTierLevels = event.params._existingEligibleTierLevels
-  entity._updatedEligibleTierLevels = event.params._updatedEligibleTierLevels
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  const perkId = generatePerkId(event.params.perkId);
+  const entity = PerkEntity.load(perkId);
+  if(entity == null) {
+    log.error("Perk {}, not created properly.", [perkId]);
+    return;
+  }
+  entity.eligiblePerksForTier = event.params._updatedEligibleTierLevels;
+  entity.lastUpdatedOn = event.block.timestamp;
+  entity.lastUpdateTrxHash = event.transaction.hash;
 
   entity.save()
+}
+
+export function handlePerkUriUpdated(event: PerkUriUpdatedEvent): void {
+  const perkIdFromEvent = event.params.perkId;
+  const perkId = generatePerkId(perkIdFromEvent);
+  let perkEntity =  PerkEntity.load(perkId);
+  if(perkEntity == null) {
+    log.error("Perk entity {}, not created correctly", [perkId]);
+    return;
+  }
+  perkEntity.perkUri = event.params.newUri;
+  perkEntity.lastUpdateTrxHash = event.transaction.hash;
+  perkEntity.lastUpdatedOn = event.block.timestamp;
+  perkEntity.save();
 }
 
 export function handlePerkRegistered(event: PerkRegisteredEvent): void {
-  let entity = new PerkRegistered(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
+  const perkId = generatePerkId(event.params.perkId);
+  const perkRegistryId = generatePerkRegistryId(event.address);
+  const entity = new PerkEntity(perkId);
   entity.perkId = event.params.perkId
   entity.name = event.params.name
-  entity.uri = event.params.uri
+  entity.perkUri = event.params.uri
+  entity.isPerkActive = true;
+  entity.createdOn = event.block.timestamp;
+  entity.creationTrxHash = event.transaction.hash;
+  entity.perksRegistry = perkRegistryId;
+  entity.eligiblePerksForTier = [];
+  entity.lastUpdateTrxHash = event.transaction.hash;
+  entity.lastUpdatedOn = event.block.timestamp;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleRoleAdminChanged(event: RoleAdminChangedEvent): void {
-  let entity = new RoleAdminChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.role = event.params.role
-  entity.previousAdminRole = event.params.previousAdminRole
-  entity.newAdminRole = event.params.newAdminRole
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  entity.save();
 }
 
 export function handleRoleGranted(event: RoleGrantedEvent): void {
-  let entity = new RoleGranted(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.role = event.params.role
-  entity.account = event.params.account
-  entity.sender = event.params.sender
+  const contractAddress = event.address;
+  const perksRegistryId = generatePerkRegistryId(contractAddress);
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let perksRegistry = PerksRegistryEntity.load(perksRegistryId);
+  if(perksRegistry == null) {
+    perksRegistry = new PerksRegistryEntity(perksRegistryId);
 
-  entity.save()
-}
+    // read data from smart contract
+    const contractInstance = PerksRegistryContract.bind(contractAddress);
 
-export function handleRoleRevoked(event: RoleRevokedEvent): void {
-  let entity = new RoleRevoked(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.role = event.params.role
-  entity.account = event.params.account
-  entity.sender = event.params.sender
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+    // add initial data
+    perksRegistry.address = contractAddress;
+    perksRegistry.deploymentTrxHash = event.transaction.hash;
+    perksRegistry.deploymentBlockNumber = event.block.number;
+    perksRegistry.deploymentTimestamp = event.block.timestamp;
+    perksRegistry.membershipContract = generateMembershipContractId(contractInstance.sdvMembershipContract());
+    perksRegistry.save();
+  }
 }

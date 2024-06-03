@@ -27,5 +27,13 @@ export function generateTrustedEntityRoleTypeId(roleHash: Bytes): string{
   return `TRUSTED_ENTITY-${roleHash.toHexString()}`;
 }
 
+export function generatePerkId(perkIdFromEvent: BigInt): string {
+  return perkIdFromEvent.toString();
+}
+
+export function generatePerkRegistryId(perkRegistryAddress: Address): string  {
+  return perkRegistryAddress.toHexString();
+}
+
 export const DefaultAdminRoleHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
   
