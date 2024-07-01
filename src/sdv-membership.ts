@@ -201,7 +201,7 @@ export function handleTransfer(event: TransferEvent): void {
 }
 
 export function handleTierUpdated(event: TierUpdatedEvent): void {
-  const tokenId = event.params.tierId;
+  const tokenId = event.params.tokenId;
   const membershipId = generateMembershipId(tokenId);
   const membershipEntity = MembershipEntity.load(membershipId);
 

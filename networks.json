@@ -1,11 +1,20 @@
 {
   "base-sepolia": {
     "SDVMembership": {
-      "address": "0x4ac0818e50cAd4c92F1E89815dAb5C646a938c44",
-      "startBlock": 10525475
+      "address": "0x6c38a6AA8465F5AfBa86d9e73C09C1dc9f4809c9",
+      "startBlock": 10833436
     },
     "SDVPerksRegistry": {
-      "address": "0x351A2E44f696927BB701cE52c836d5204719b843"
+      "address": "0x5927604Ec5bf10e2A3B380F711757bfb485d4aC3"
+    }
+  },
+  "base": {
+    "SDVMembership": {
+      "address": "0x1190442f6b7505d3edc30c59e5B99EBfdEeF34e9",
+      "startBlock": 16526077
+    },
+    "SDVPerksRegistry": {
+      "address": "0xCbeB4D1A275F3c8c6095EbD4a503AFD77228Bb4e"
     }
   }
 }

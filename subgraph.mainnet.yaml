@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: SDVMembership
-    network: base-sepolia
+    network: base
     source:
-      address: "0x6c38a6AA8465F5AfBa86d9e73C09C1dc9f4809c9"
+      address: "0x1190442f6b7505d3edc30c59e5B99EBfdEeF34e9"
       abi: SDVMembership
-      startBlock: 10833436
+      startBlock: 16526077
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -40,11 +40,11 @@ dataSources:
       file: ./src/sdv-membership.ts
   - kind: ethereum
     name: SDVPerksRegistry
-    network: base-sepolia
+    network: base
     source:
-      address: "0x5927604Ec5bf10e2A3B380F711757bfb485d4aC3"
+      address: "0xCbeB4D1A275F3c8c6095EbD4a503AFD77228Bb4e"
       abi: SDVPerksRegistry
-      startBlock: 10833436
+      startBlock: 16526077
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
